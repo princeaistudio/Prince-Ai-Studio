@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prince AI Studio</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+    }
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #292e45;
+    }
+    header h2 { color: #a78bfa; margin: 0; }
+    .hero {
+      text-align: center;
+      padding: 65px 20px 35px;
+    }
+    .hero h1 {
+      font-size: clamp(34px, 8vw, 54px);
+      margin-bottom: 12px;
+    }
+    .hero span { color: #a78bfa; }
+    .hero p { color: #c4c9d8; line-height: 1.6; }
+    .panel {
+      max-width: 650px;
+      margin: 0 auto 50px;
+      padding: 22px;
+      background: #151b30;
+      border: 1px solid #343b58;
+      border-radius: 18px;
+    }
+    .tabs { display: flex; gap: 10px; }
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 10px;
+      padding: 13px;
+      font-weight: bold;
+    }
+    .tab {
+      flex: 1;
+      background: #252c43;
+      color: white;
+    }
+    .tab.active, .generate {
+      background: #8b5cf6;
+      color: white;
+    }
+    textarea, input[type=file] {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid #424967;
+      border-radius: 10px;
+      background: #0b1020;
+      color: white;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    .generate { width: 100%; margin-top: 15px; font-size: 16px; }
+    #status { color: #c4b5fd; line-height: 1.5; }
+    footer { text-align: center; color: #9ca3af; padding: 25px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>✦ Prince AI Studio</h2>
+    <span>AI VIDEO</span>
+  </header>
+
+  <section class="hero">
+    <h1>Create Videos with <span>AI</span></h1>
+    <p>Turn your imagination and images into amazing videos.</p>
+  </section>
+
+  <main class="panel">
+    <div class="tabs">
+      <button class="tab active" id="textTab" onclick="setMode('text')">Text to Video</button>
+      <button class="tab" id="imageTab" onclick="setMode('image')">Image to Video</button>
+    </div>
+
+    <form id="videoForm">
+      <textarea id="prompt" placeholder="Describe the video you want to create..." required></textarea>
+      <input id="photo" type="file" accept="image/*" hidden>
+      <button type="button" id="photoButton" onclick="document.getElementById('photo').click()" hidden>Choose Image</button>
+      <button type="submit" class="generate">Generate Video</button>
+    </form>
+    <p id="status">Choose a mode to get started.</p>
+  </main>
+
+  <footer>Prince AI Studio · Imagine it. Create it.</footer>
+
+  <script>
+    let mode = "text";
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      document.getElementById("textTab").classList.toggle("active", mode === "text");
+      document.getElementById("imageTab").classList.toggle("active", mode === "image");
+      document.getElementById("photo").hidden = mode !== "image";
+      document.getElementById("photoButton").hidden = mode !== "image";
+      document.getElementById("prompt").placeholder =
+        mode === "text" ? "Describe the video you want to create..." : "Describe how your image should move...";
+      document.getElementById("status").textContent =
+        mode === "text" ? "Text-to-video selected." : "Image-to-video selected.";
+    }
+
+    document.getElementById("videoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const prompt = document.getElementById("prompt").value.trim();
+      const photo = document.getElementById("photo").files[0];
+
+      if (!prompt) {
+        document.getElementById("status").textContent = "Please enter a video description.";
+        return;
+      }
+      if (mode === "image" && !photo) {
+        document.getElementById("status").textContent = "Please choose an image first.";
+        return;
+      }
+      document.getElementById("status").textContent =
+        "Your request is ready. AI video generation will work after we connect a video model.";
+    });
+  </script>
+</body>
+</html>
